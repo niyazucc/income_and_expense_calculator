@@ -2,7 +2,8 @@ import 'package:calculator/screens/perbelanjaan.dart';
 import 'package:calculator/screens/peruntukan.dart';
 import 'package:calculator/screens/senarai.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 void main() {
   runApp(MyApp());
 }
@@ -13,6 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        MonthYearPickerLocalizations.delegate,
+      ],
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // primarySwatch: Colors.black, // Your primary color
@@ -59,13 +65,22 @@ class _FinanceHomeState extends State<FinanceHome>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          'Peruntukan Calculator',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontSize: 20,
-          ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.calculate,
+              color: Colors.white,
+              size: 30,
+            ),
+            const Text(
+              'I&E Calculator',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+          ],
         ),
         backgroundColor: Colors.black,
         bottom: TabBar(
@@ -92,7 +107,7 @@ class _FinanceHomeState extends State<FinanceHome>
             Tab(
               icon: Icon(Icons.list),
               child: Text(
-                'SENARAI',
+                'REPORT',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),

@@ -69,18 +69,11 @@ class _MoneyInFormState extends State<MoneyInForm> {
       return;
     }
 
-    if (fileBytes == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a file')),
-      );
-      return;
-    }
-
     Peruntukan peruntukan = Peruntukan(
       tarikhDiterima: _tarikhDiterima?.toIso8601String(),
       catatan: catatan,
       amaun: amount,
-      file: fileBytes!,
+      file: fileBytes,
     );
 
     try {
@@ -94,7 +87,7 @@ class _MoneyInFormState extends State<MoneyInForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
       child: SingleChildScrollView(
         child: Column(
@@ -106,6 +99,56 @@ class _MoneyInFormState extends State<MoneyInForm> {
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Row(
+              children: [
+                Text(
+                  'Pilih Tarikh:',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[200],
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 12),
+                      alignment: Alignment.centerLeft,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      ).then((pickedDate) {
+                        if (pickedDate != null) {
+                          setState(() {
+                            _tarikhDiterima = pickedDate;
+                          });
+                        }
+                      });
+                    },
+                    child: Text(
+                      _tarikhDiterima != null
+                          ? 'Date: ${_tarikhDiterima!.toLocal().toString().split(' ')[0]}'
+                          : 'Select Tarikh Peruntukan',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             TextField(
@@ -129,53 +172,36 @@ class _MoneyInFormState extends State<MoneyInForm> {
               ),
             ),
             const SizedBox(height: 20),
-            TextButton(
-              style: ButtonStyle(
-                padding: WidgetStateProperty.all<EdgeInsets>(
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                ),
-                foregroundColor: WidgetStateProperty.all(Colors.grey),
-              ),
-              onPressed: () {
-                showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                ).then((pickedDate) {
-                  if (pickedDate != null) {
-                    setState(() {
-                      _tarikhDiterima = pickedDate;
-                    });
-                  }
-                });
-              },
-              child: Text(
-                _tarikhDiterima != null
-                    ? 'Date: ${_tarikhDiterima!.toLocal().toString().split(' ')[0]}'
-                    : 'Select Tarikh Diterima',
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                ),
-              ),
-            ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: getImageorVideoFromGallery,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey[200],
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                alignment: Alignment.centerLeft,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Add File:',
+                  style: TextStyle(fontSize: 18),
                 ),
-              ),
-              child: Text(
-                fileBytes != null ? 'File: ${fileName!}' : 'Select File',
-                style: const TextStyle(color: Colors.black, fontSize: 16),
-              ),
+                SizedBox(
+                  width: 15,
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: getImageorVideoFromGallery,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[200],
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 12),
+                      alignment: Alignment.centerLeft,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      fileBytes != null ? 'File: ${fileName!}' : 'Select File',
+                      style: const TextStyle(color: Colors.black, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             Center(
